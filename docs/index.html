@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Tri-DNO improves 3D human-object grasps by optimizing diffusion noise with contact, penetration, and hand-orientation objectives, without retraining TriDi.">
+  <meta name="keywords" content="Tri-DNO, TriDi, human-object interaction, diffusion noise optimization, 3D generation, digital humans">
+  <meta name="theme-color" content="#ffffff">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Tri-DNO: Trilateral Diffusion Noise Optimization for 3D Human Object Interaction">
+  <meta property="og:description" content="Better hand-object contact. Less penetration. No retraining.">
+  <title>Tri-DNO: Trilateral Diffusion Noise Optimization for 3D Human Object Interaction</title>
+  <link rel="icon" href="./static/images/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <nav class="page-nav" aria-label="Page sections">
+    <a class="nav-brand" href="#top">Tri-DNO</a>
+    <div class="nav-links">
+      <a href="#method">Method</a>
+      <a href="#results">Results</a>
+      <a href="#application">Application</a>
+    </div>
+  </nav>
+
+  <main id="main">
+    <header class="hero publication-header" id="top">
+      <div class="hero-body">
+        <div class="container publication-container has-text-centered">
+          <h1 class="title publication-title">
+            <span class="method-name">Tri-DNO</span>
+            <span class="title-description">Trilateral Diffusion Noise Optimization<br class="desktop-break">
+              for 3D Human Object Interaction</span>
+          </h1>
+          <div class="publication-authors">
+            <span class="author-block"><a href="https://orcid.org/0009-0007-3331-622X">Paul Hinzer</a><sup>1</sup>,</span>
+            <span class="author-block"><a href="https://orcid.org/0000-0002-0227-2857">Niklas Gard</a><sup>1,2</sup>,</span>
+            <span class="author-block"><a href="https://orcid.org/0000-0002-2086-0951">Anna Hilsmann</a><sup>1</sup>,</span>
+            <span class="author-block"><a href="https://orcid.org/0000-0001-8378-4805">Peter Eisert</a><sup>1,2</sup></span>
+          </div>
+          <div class="publication-affiliations">
+            <span class="author-block"><sup>1</sup>Fraunhofer HHI</span>
+            <span class="author-block"><sup>2</sup>HU Berlin</span>
+          </div>
+          <p class="publication-location">Berlin, Germany</p>
+          <div class="publication-links" aria-label="Publication resources">
+              <a href="http://arxiv.org/abs/2611.30607">
+            <button class="button is-rounded resource-button" type="button" aria-describedby="resource-status">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 3 14 18M19 3 5 21M8 7l8 10"/></svg>
+              <span>arXiv</span>
+            </button>
+              </a>
+            <button class="button is-rounded resource-button" type="button" disabled aria-describedby="resource-status">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m8 6-6 6 6 6M16 6l6 6-6 6M14 3l-4 18"/></svg>
+              <span>Code</span>
+            </button>
+          </div>
+          <p id="resource-status" class="resource-status">Code will be released soon.</p>
+        </div>
+      </div>
+    </header>
+
+    <section class="teaser section" aria-label="Tri-DNO teaser">
+      <div class="container publication-container">
+        <figure>
+          <a class="figure-link" href="./static/images/teaser-1920.webp" aria-label="View a larger version of the Tri-DNO teaser">
+            <img src="./static/images/teaser-1920.webp"
+                 srcset="./static/images/teaser-960.webp 960w, ./static/images/teaser-1920.webp 1920w"
+                 sizes="(max-width: 1008px) calc(100vw - 48px), 960px"
+                 width="1920" height="614" fetchpriority="high"
+                 alt="Generated wineglass and phone interactions, each shown from three full-body viewpoints and three close-up views of the grasp.">
+          </a>
+          <figcaption class="teaser-caption">
+Tri-DNO improves 3D human–object interaction generation by combining diffusion noise optimization with interaction-aware geometric constraints. Our method generates plausible hand–object grasps for everyday objects, such as a wine glass or a mobile phone, without retraining the underlying diffusion model. Each row shows a generated interaction from multiple viewpoints.
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="section" id="abstract" aria-labelledby="abstract-title">
+      <div class="container publication-container">
+        <h2 class="title is-3 section-title" id="abstract-title">Abstract</h2>
+        <div class="content">
+          <p>Generating realistic 3D human object interactions (HOI) is essential for applications, such as augmented or virtual reality (AR/VR) or character animation of interactive entertainment. A particular challenge lies in the faithful generation of hand grasps in human object interaction (HOI) scenes, where even minor geometric inconsistencies, such as insufficient contact or interpenetration, can significantly compromise realism. While diffusion-based generative models have shown promising results in HOI synthesis, ensuring physically plausible hand&ndash;object interactions remains challenging.</p>
+          <p>We present Tri-DNO, a diffusion noise optimization strategy to sample from a pretrained multimodal HOI diffusion model, improving hand-object contact. Rather than modifying or retraining the generative model, our approach iteratively optimizes the initial noise of the diffusion generator, thereby generating firm hand object contact, while mitigating penetration and keeping the hand position realistic. Experiments on the GRAB dataset demonstrate improvements over the baseline in grasp quality without additional model training or increased computational cost compared to existing methods. We further demonstrate the applicability of our approach to practical media production scenarios.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="method" aria-labelledby="method-title">
+      <div class="container publication-container">
+        <h2 class="title is-3 section-title" id="method-title">Method overview</h2>
+        <div class="content">
+          <p>Tri-DNO builds on <a href="https://ptrvilya.github.io/tridi/">TriDi</a>, a trilateral diffusion model of humans, objects, and interactions. A deterministic DDIM sampler maps initial noise to a clean 3D scene. We evaluate the scene with interaction-aware geometric objectives, backpropagate through the sampler, and update the initial noise. The pretrained model stays fixed.</p>
+          <p>The user chooses which modalities to generate and which to provide as conditions. For example, Tri-DNO can generate a human pose for a fixed object, or place an object into a fixed human grasp.</p>
+        </div>
+        <figure class="method-figure">
+          <a class="figure-link" href="./static/images/architecture-1920.webp" aria-label="View a larger version of the method diagram">
+            <img src="./static/images/architecture-960.webp"
+                 srcset="./static/images/architecture-960.webp 960w, ./static/images/architecture-1920.webp 1920w"
+                 sizes="(max-width: 800px) calc(100vw - 48px), 760px"
+                 width="960" height="713" loading="lazy"
+                 alt="An initial noisy human-object-interaction scene passes through TriDi and a DDIM ODE solver. The generated scene is evaluated and a feedback loop updates the initial noise.">
+          </a>
+          <figcaption>Repeated deterministic sampling and noise updates improve the generated interaction without retraining TriDi.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="section" id="results" aria-labelledby="results-title">
+      <div class="container publication-container">
+        <h2 class="title is-3 section-title" id="results-title">Results</h2>
+        <div class="content">
+          <p>TriDi can produce plausible overall poses while leaving objects floating beside the hand or fingers penetrating their surface. Tri-DNO reduces these artifacts, improving the geometry of the grasp.</p>
+        </div>
+        <figure>
+          <a class="figure-link" href="./static/images/compare-2400.webp" aria-label="View a larger version of the Tri-DNO and TriDi comparison">
+            <img src="./static/images/compare-1200.webp"
+                 srcset="./static/images/compare-1200.webp 1200w, ./static/images/compare-2400.webp 2400w"
+                 sizes="(max-width: 1008px) calc(100vw - 48px), 960px"
+                 width="1200" height="1326" loading="lazy"
+                 alt="Tri-DNO on the left and TriDi on the right, compared on cup, phone, mouse, knife, and wineglass grasps with full-body views and hand close-ups.">
+          </a>
+          <figcaption>Tri-DNO (left) and TriDi (right) on five everyday objects. <a href="./static/images/compare-2400.webp">View larger comparison</a>.</figcaption>
+        </figure>
+        <div class="results-table-wrapper">
+          <table class="table is-fullwidth results-table">
+            <caption>Grasp quality on GRAB</caption>
+            <thead>
+              <tr>
+                <th scope="col">Method</th>
+                <th scope="col">Valid grasps <span class="metric-direction">(higher is better)</span></th>
+                <th scope="col">Severe penetration <span class="metric-direction">(lower is better)</span></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><th scope="row">TriDi</th><td>11%</td><td>26.3%</td></tr>
+              <tr><th scope="row">Tri-DNO (ours)</th><td><strong>41%</strong></td><td><strong>12.3%</strong></td></tr>
+            </tbody>
+          </table>
+          <p class="table-note">Grasp validity is assessed by visual inspection of 80 scenes per method across eight objects. A valid grasp holds the object at a semantically plausible location, without noticeable finger penetration. Severe penetration (PEN-X) is the proportion of evaluated scenes with penetration deeper than 15 mm.</p>
+        </div>
+      </div>
+
+      <div class="container publication-container">
+        <p class="section-intro">These videos visualize iterations of noise optimization for individual static scenes, not generated motion sequences.</p>
+        <div class="video-grid">
+          <figure>
+            <video controls muted playsinline preload="none" width="800" height="800"
+                   poster="./static/images/denoising_cup_drink_1-poster.webp"
+                   aria-label="Optimization of a human pose grasping a fixed cup" aria-describedby="cup-caption">
+              <source src="./static/videos/denoising_cup_drink_1.mp4" type="video/mp4">
+              Your browser does not support embedded video. <a href="./static/videos/denoising_cup_drink_1.mp4">Download the cup optimization video</a>.
+            </video>
+            <figcaption id="cup-caption"><strong>Generate a grasp for a fixed object.</strong> The cup stays fixed while the human pose is optimized to improve hand-object contact.</figcaption>
+          </figure>
+          <figure>
+            <video controls muted playsinline preload="none" width="800" height="800"
+                   poster="./static/images/denoising_hammer_lift3-poster.webp"
+                   aria-label="Optimization of a hammer position for a fixed human grasp" aria-describedby="hammer-caption">
+              <source src="./static/videos/denoising_hammer_lift3.mp4" type="video/mp4">
+              Your browser does not support embedded video. <a href="./static/videos/denoising_hammer_lift3.mp4">Download the hammer optimization video</a>.
+            </video>
+            <figcaption id="hammer-caption"><strong>Place an object into a fixed grasp.</strong> The human pose stays fixed while the hammer moves into the hand. Penetration loss is disabled in this experiment to allow the object to pass through the closed hand; residual penetration remains.</figcaption>
+          </figure>
+        </div>
+      </div>
+
+    <section class="section" id="application" aria-labelledby="application-title">
+      <div class="container publication-container">
+        <h2 class="title is-3 section-title" id="application-title">Application results</h2>
+        <div class="content">
+          <p>Generated interactions can be transferred to a digital human avatar learned from volumetric capture. Here, the avatar holds a phone in a scene rendered in the Unity game engine, demonstrating a practical application for games and media production.</p>
+        </div>
+        <figure>
+          <a class="figure-link" href="./static/images/application-1920.webp" aria-label="View a larger version of the digital human application">
+            <img src="./static/images/application-960.webp"
+                 srcset="./static/images/application-960.webp 960w, ./static/images/application-1920.webp 1920w"
+                 sizes="(max-width: 1008px) calc(100vw - 48px), 960px"
+                 width="960" height="480" loading="lazy"
+                 alt="A volumetrically captured digital human holding a blue phone in Unity, shown in an upper-body view and a close-up of the hand grasp.">
+          </a>
+          <figcaption>A generated phone interaction transferred to a captured avatar and rendered in Unity.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="section" id="related" aria-labelledby="related-title">
+      <div class="container publication-container">
+        <h2 class="title is-3 section-title" id="related-title">Related links</h2>
+        <div class="content related-links">
+          <p><a href="https://ptrvilya.github.io/tridi/"><strong>TriDi: Trilateral Diffusion of 3D Humans, Objects and Interactions</strong></a><br>The pretrained multimodal diffusion model on which Tri-DNO builds.</p>
+          <p><a href="https://grab.is.tue.mpg.de/"><strong>GRAB: A Dataset of Whole-Body Human Grasping of Objects</strong></a><br>The dataset used for our experiments and evaluation.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="citation" aria-labelledby="citation-title">
+      <div class="container publication-container">
+        <h2 class="title is-3 section-title" id="citation-title">Citation</h2>
+        <pre class="citation-block" aria-label="BibTeX citation, not yet available"><code id="bibtex">
+@inproceedings{hinzer2026tri,
+  title={Tri-DNO: Trilateral Diffusion Noise Optimization for 3D Human Object Interaction},
+  author={Hinzer, Paul and Gard, Niklas and Hilsmann, Anna and Eisert, Peter},
+  booktitle={European Conference on Visual Media Production (CVMP)},
+  pages={1--10},
+  year={2026}
+}
+            </code></pre>
+      </div>
+    </section>
+
+    <section class="section acknowledgments" aria-labelledby="acknowledgments-title">
+      <div class="container publication-container">
+        <h2 class="title is-4 section-title" id="acknowledgments-title">Acknowledgments</h2>
+        <div class="content">
+          <p>Our method builds on <a href="https://ptrvilya.github.io/tridi/">TriDi</a> by Ilya A. Petrov, Riccardo Marin, Julian Chibane, and Gerard Pons-Moll. We thank the authors for making their research and code available.</p>
+          <p>This work has been funded by the European Commission (Horizon Europe project Luminous, grant no. 101135724).</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container publication-container has-text-centered">
+      <p>Website template adapted from <a href="https://nerfies.github.io/">Nerfies</a>.
+        <a href="https://github.com/nerfies/nerfies.github.io">Original template source</a>,
+        licensed under <a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>.</p>
+    </div>
+  </footer>
+</body>
+</html>
